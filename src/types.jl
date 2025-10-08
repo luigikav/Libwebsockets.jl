@@ -287,7 +287,7 @@ Base.@kwdef mutable struct LwsContextCreationInfo
     tls_session_cache_max::Cuint = 0
     gid::Cuint = 0
     uid::Cuint = 0
-    options::UInt64 = 0
+    options::Cuintmax_t = 0
     user::Ptr{Cvoid} = C_NULL
     count_threads::Cuint = 0
     fd_limit_per_thread::Cuint = 0
