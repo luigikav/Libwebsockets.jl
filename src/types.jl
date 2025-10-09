@@ -295,7 +295,7 @@ Base.@kwdef mutable struct LwsContextCreationInfo
     external_baggage_free_on_destroy::Ptr{Cvoid} = C_NULL
     pt_serv_buf_size::Cuint = 0
     fops::Ptr{LwsPlatFileOps} = C_NULL
-    socks_proxy_address::Ptr{Cuchar} = C_NULL
+    socks_proxy_address::Ptr{Cchar} = C_NULL
     socks_proxy_port::Cuint = 0
     foreign_loops::Ptr{Ptr{Cvoid}} = C_NULL
     signal_cb::Ptr{Cvoid} = C_NULL
@@ -315,11 +315,13 @@ Base.@kwdef mutable struct LwsContextCreationInfo
     early_smd_cb::Ptr{Cvoid} = C_NULL
     early_smd_opaque::Ptr{Cvoid} = C_NULL
     early_smd_class_filter::Cint = 0
-    smd_ttl_us::Cintmax_t = 0
+    smd_ttl_us::UInt64 = 0
     smd_queue_depth::Cushort = 0
     fo_listen_queue::Cint = 0
     event_lib_custom::Ptr{LwsPluginEvlib} = C_NULL
     log_cx::Ptr{LwsLogCx} = C_NULL
+    default_loglevel::Cint = 0
+    vh_listen_sockfd::Cint = 0
     http_nsc_filepath::Ptr{Cchar} = C_NULL
     http_nsc_heap_max_footprint::Csize_t = 0
     http_nsc_heap_max_items::Csize_t = 0
