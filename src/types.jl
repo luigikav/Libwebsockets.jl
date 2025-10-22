@@ -45,7 +45,9 @@ export Lws,
     LwsRetryBo,
     LwsDll2,
     LwsStateNotifyLink,
-    LwsSortedUsecList
+    LwsSortedUsecList,
+    LwsTransportClientOps,
+    LwsTransportProxyOps
 
 struct LwsContext end
 struct LwsVhost end
@@ -61,6 +63,8 @@ struct LwsSpa end
 struct LwsAc end
 struct LwsX509Cert end
 struct LwsSslCtxSt end
+struct LwsTransportProxyOps end
+struct LwsTransportClientOps end
 
 Base.@kwdef mutable struct LwsLogCxUnion
     emit_cx::Ptr{Cvoid} = C_NULL
@@ -90,7 +94,7 @@ end
 
 Base.@kwdef mutable struct LwsAcmeCertAgingArgs
     vh::Ptr{LwsVhost} = C_NULL
-    element_overrides::Ptr{Ptr{Cchar}} = C_NULL# max_len = LWS_TLS_TOTAL_COUNT
+    element_overrides::Ptr{Ptr{Cchar}} = C_NULL # max_len = LWS_TLS_TOTAL_COUNT
 end
 
 Base.@kwdef mutable struct LwsExtOptions
@@ -159,7 +163,7 @@ Base.@kwdef mutable struct LwsPluginEvlib
 end
 
 Base.@kwdef mutable struct LwsTokenLimits
-    token_limit::Vector{Cushort} = fill(Cushort(0), WSI_TOKEN_COUNT)# max_len = WSI_TOKEN_COUNT
+    token_limit::Vector{Cushort} = fill(Cushort(0), WSI_TOKEN_COUNT) # max_len = WSI_TOKEN_COUNT
 end
 
 Base.@kwdef mutable struct LwsHttpMount
@@ -238,7 +242,7 @@ Base.@kwdef mutable struct LwsContextCreationInfo
     max_http_header_data2::Cuint = 0
     max_http_header_pool2::Cuint = 0
     keepalive_timeout::Cint = 0
-    http2_settings::NTuple{7,UInt32} = ntuple(i -> UInt32(0), 7)
+    http2_settings::NTuple{7,UInt32} = ntuple(_ -> UInt32(0), 7)
     max_http_header_data::Cushort = 0
     max_http_header_pool::Cushort = 0
     ssl_private_key_password::Ptr{Cchar} = C_NULL
@@ -286,7 +290,7 @@ Base.@kwdef mutable struct LwsContextCreationInfo
     tls_session_cache_max::Cuint = 0
     gid::Cuint = 0
     uid::Cuint = 0
-    options::Cuintmax_t = 0
+    options::UInt64 = 0
     user::Ptr{Cvoid} = C_NULL
     count_threads::Cuint = 0
     fd_limit_per_thread::Cuint = 0
@@ -310,21 +314,32 @@ Base.@kwdef mutable struct LwsContextCreationInfo
     system_ops::Ptr{LwsSystemOpts} = Ptr{LwsSystemOpts}(C_NULL)
     retry_and_idle_policy::Ptr{LwsRetryBo} = Ptr{LwsRetryBo}(C_NULL)
     register_notifier_list::Ptr{Ptr{LwsStateNotifyLink}} = Ptr{Ptr{LwsStateNotifyLink}}(C_NULL)
+    pss_policies_json::Ptr{Cchar} = C_NULL
+    pss_plugins::Ptr{Ptr{LwsSsPlugin}} = Ptr{Ptr{LwsSsPlugin}}(C_NULL)
+    ss_proxy_bind::Ptr{Cchar} = C_NULL
+    ss_proxy_address::Ptr{Cchar} = C_NULL
+    ss_proxy_port::Cushort = 0
+    txp_ops_ssproxy::Ptr{LwsTransportProxyOps} = Ptr{LwsTransportProxyOps}(C_NULL)
+    txp_ssproxy_info::Ptr{Cvoid} = C_NULL
+    txp_ops_sspc::Ptr{LwsTransportClientOps} = Ptr{LwsTransportClientOps}(C_NULL)
     rlimit_nofile::Cint = 0
     early_smd_cb::Ptr{Cvoid} = C_NULL
     early_smd_opaque::Ptr{Cvoid} = C_NULL
-    early_smd_class_filter::Cint = 0
+    early_smd_class_filter::UInt32 = UInt32(0)
     smd_ttl_us::UInt64 = 0
     smd_queue_depth::Cushort = 0
     fo_listen_queue::Cint = 0
     event_lib_custom::Ptr{LwsPluginEvlib} = C_NULL
     log_cx::Ptr{LwsLogCx} = C_NULL
-    default_loglevel::Cint = 0
-    vh_listen_sockfd::Cint = 0
     http_nsc_filepath::Ptr{Cchar} = C_NULL
     http_nsc_heap_max_footprint::Csize_t = 0
     http_nsc_heap_max_items::Csize_t = 0
     http_nsc_heap_max_payload::Csize_t = 0
+    default_loglevel::Cint = 0
+    vh_listen_sockfd::Cint = 0
+    wol_if::Ptr{Cchar} = C_NULL
+    argc::Cint = 0
+    argv::Ptr{Ptr{Cchar}} = Ptr{Ptr{Cchar}}(C_NULL)
     _unused::NTuple{2,Ptr{Cvoid}} = (Ptr{Nothing}(C_NULL), Ptr{Nothing}(C_NULL))
 end
 
