@@ -407,7 +407,7 @@ end
 
 Base.@kwdef struct _ns
     len::Cint = 0
-    name::NTuple{64, Cchar} = = ntuple(_ -> Cchar('\0'), 64)
+    name::NTuple{64, Cchar} = ntuple(_ -> Cchar('\0'), 64)
 end
 
 Base.@kwdef mutable struct LwsTlsCertInfoResults
@@ -415,7 +415,7 @@ Base.@kwdef mutable struct LwsTlsCertInfoResults
 end
 
 Base.@kwdef mutable struct LwsTlsSessionDump
-    tag::NTuple{96, Cchar} = = ntuple(_ -> Cchar('\0'), 96) # LWS_SESSION_TAG_LEN = 96
+    tag::NTuple{96, Cchar} = ntuple(_ -> Cchar('\0'), 96) # LWS_SESSION_TAG_LEN = 96
     blob::Ptr{Cvoid} = C_NULL
     opaque::Ptr{Cvoid} = C_NULL
     blob_len::Csize_t = 0
