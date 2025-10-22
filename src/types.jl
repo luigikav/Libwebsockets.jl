@@ -374,7 +374,7 @@ end
 
 Base.@kwdef mutable struct LwsProcessHtmlState
     start::Ptr{Cchar} = C_NULL
-    swallow:NTuple{16, Cchar} = ntuple(_ -> Cchar('\0'), 16)
+    swallow::NTuple{16, Cchar} = ntuple(_ -> Cchar('\0'), 16)
     pos::Cint = 0
     data::Ptr{Cvoid} = C_NULL
     vars::Ptr{Ptr{Cchar}} = C_NULL
