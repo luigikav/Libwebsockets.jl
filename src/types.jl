@@ -63,7 +63,6 @@ struct LwsX509Cert end
 struct LwsSslCtxSt end
 
 Base.@kwdef mutable struct LwsLogCxUnion
-    emit::Ptr{Cvoid} = C_NULL
     emit_cx::Ptr{Cvoid} = C_NULL
 end
 
@@ -348,9 +347,9 @@ Base.@kwdef mutable struct LwsClientConnectInfo
     vhost::Ptr{LwsVhost} = C_NULL
     pwsi::Ptr{Ptr{Lws}} = C_NULL
     iface::Ptr{Cchar} = C_NULL
+    local_port::Cint = 0
     local_protocol_name::Ptr{Cchar} = C_NULL
     alpn::Ptr{Cchar} = C_NULL
-    seq::Ptr{LwsSequencer} = C_NULL
     opaque_user_data::Ptr{Cvoid} = C_NULL
     retry_and_idle_policy::Ptr{LwsRetryBo} = C_NULL
     manual_initial_tx_credit::Cint = 0
@@ -360,6 +359,8 @@ Base.@kwdef mutable struct LwsClientConnectInfo
     fi_wsi_name::Ptr{Cchar} = C_NULL
     keep_warm_secs::Cushort = 0
     log_cx::Ptr{LwsLogCx} = C_NULL
+    auth_username::Ptr{Cchar} = C_NULL
+    auth_password::Ptr{Cchar} = C_NULL
     _unused::NTuple{4,Ptr{Cvoid}} = (Ptr{Nothing}(C_NULL), Ptr{Nothing}(C_NULL), Ptr{Nothing}(C_NULL), Ptr{Nothing}(C_NULL))
 end
 
@@ -373,7 +374,7 @@ end
 
 Base.@kwdef mutable struct LwsProcessHtmlState
     start::Ptr{Cchar} = C_NULL
-    swallow::Ptr{Cchar} = C_NULL# max_len = 16
+    swallow:NTuple{16, Cchar} = = ntuple(_ -> Cchar('\0'), 16)
     pos::Cint = 0
     data::Ptr{Cvoid} = C_NULL
     vars::Ptr{Ptr{Cchar}} = C_NULL
@@ -381,7 +382,7 @@ Base.@kwdef mutable struct LwsProcessHtmlState
     replace::Ptr{Cvoid} = C_NULL
 end
 
-Base.@kwdef mutable struct LwsTokens
+Base.@kwdef mutable struct LwswrTokens
     token::Ptr{Cuchar} = C_NULL
     len::Cint = 0
 end
@@ -404,16 +405,17 @@ Base.@kwdef mutable struct LwsWritePassthru
     wp::Cuint = 0
 end
 
-Base.@kwdef mutable struct LwsTlsCertInfoResults
-    verified::Cuint = 0
-    time::Clong = 0
-    usage::Cuint = 0
+Base.@kwdef struct _ns
     len::Cint = 0
-    name::Ptr{Cchar} = C_NULL
+    name::NTuple{64, Cchar} = = ntuple(_ -> Cchar('\0'), 64)
+end
+
+Base.@kwdef mutable struct LwsTlsCertInfoResults
+    ns::_ns = _ns()
 end
 
 Base.@kwdef mutable struct LwsTlsSessionDump
-    tag::Ptr{Cchar} = C_NULL # max_len = LWS_SESSION_TAG_LEN
+    tag::NTuple{96, Cchar} = = ntuple(_ -> Cchar('\0'), 96) # LWS_SESSION_TAG_LEN = 96
     blob::Ptr{Cvoid} = C_NULL
     opaque::Ptr{Cvoid} = C_NULL
     blob_len::Csize_t = 0
