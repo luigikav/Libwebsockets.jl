@@ -36,6 +36,7 @@ export Lws,
     LwsTlsCertInfoResults,
     LwsTlsSessionDump,
     LwsTokenLimits,
+    LwsTokens,
     LwsVhost,
     LwsWritePassthru,
     LwsX509Cert,
@@ -396,7 +397,7 @@ Base.@kwdef mutable struct LwsProcessHtmlState
     replace::Ptr{Cvoid} = C_NULL
 end
 
-Base.@kwdef mutable struct LwswrTokens
+Base.@kwdef mutable struct LwsTokens
     token::Ptr{Cuchar} = C_NULL
     len::Cint = 0
 end
