@@ -159,11 +159,6 @@ export lws_add_http_common_headers,
     lws_retry_sul_schedule,
     lws_retry_sul_schedule_retry_wsi,
     lws_remaining_packet_payload,
-    get_ws_cb,
-    get_connect_cb,
-    get_recv_timeout_cb,
-    get_ext_pm_deflate_cb,
-    get_http_cb,
     lws_parse_uri,
     lws_get_opaque_user_data,
     lws_set_opaque_user_data,
@@ -820,30 +815,6 @@ end
 
 function lws_set_timer_usecs(wsi, usecs)
     ccall((:lws_rx_flow_control, libwebsockets), Cvoid, (Ptr{Lws}, Clong), wsi, usecs)
-end
-
-function get_ws_cb()
-    @cfunction(ws_callback, Cint, (Ptr{Lws}, Cuint, Ptr{Cvoid}, Ptr{Cvoid}, Csize_t))
-end
-
-function get_connect_cb()
-    @cfunction(connect_cb, Cvoid, (Ptr{LwsSortedUsecList},))
-end
-
-function get_recv_timeout_cb()
-    @cfunction(recv_timeout_cb, Cvoid, (Ptr{LwsSortedUsecList},))
-end
-
-function get_ext_pm_deflate_cb()
-    @cfunction(
-        lws_extension_callback_pm_deflate,
-        Cint,
-        (Ptr{LwsContext}, Ptr{LwsExtension}, Ptr{Lws}, Cint, Ptr{Cvoid}, Ptr{Cvoid}, Csize_t,)
-    )
-end
-
-function get_http_cb()
-    @cfunction(http_callback, Cint, (Ptr{Lws}, Cuint, Ptr{Cvoid}, Ptr{Cvoid}, Csize_t))
 end
 
 function lws_parse_uri(p::Ptr{Cchar}, prot::Ref{Ptr{Cchar}}, ads::Ref{Ptr{Cchar}}, port::Ref{Cint}, path::Ref{Ptr{Cchar}})
