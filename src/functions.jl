@@ -158,7 +158,17 @@ export lws_add_http_common_headers,
     lws_sul_schedule,
     lws_retry_sul_schedule,
     lws_retry_sul_schedule_retry_wsi,
-    lws_remaining_packet_payload
+    lws_remaining_packet_payload,
+    get_ws_cb,
+    get_connect_cb,
+    get_recv_timeout_cb,
+    get_ext_pm_deflate_cb,
+    get_http_cb,
+    lws_parse_uri,
+    lws_get_opaque_user_data,
+    lws_set_opaque_user_data,
+    lws_uv_initloop,
+    lws_set_protocol,
 
 function lwsl_context_get_cx(cx)
     ccall((:lwsl_context_get_cx, libwebsockets), Ptr{LwsLogCx}, (Ptr{LwsContext},), cx)
@@ -276,8 +286,8 @@ function lws_partial_buffered(wsi)
     ccall((:lws_partial_buffered, libwebsockets), Cint, (Ptr{Lws},), wsi)
 end
 
-function lws_frame_is_binary(wsi)
-    ccall((:lws_frame_is_binary, libwebsockets), Cint, (Ptr{Lws},), wsi)
+function lws_frame_is_binary(wsi)::Bool
+    ccall((:lws_frame_is_binary, libwebsockets), Cint, (Ptr{Lws},), wsi) != 0
 end
 
 function lws_set_extension_option(wsi, ext_name, opt_name, opt_val)
@@ -810,4 +820,48 @@ end
 
 function lws_set_timer_usecs(wsi, usecs)
     ccall((:lws_rx_flow_control, libwebsockets), Cvoid, (Ptr{Lws}, Clong), wsi, usecs)
+end
+
+function get_ws_cb()
+    @cfunction(ws_callback, Cint, (Ptr{Lws}, Cuint, Ptr{Cvoid}, Ptr{Cvoid}, Csize_t))
+end
+
+function get_connect_cb()
+    @cfunction(connect_cb, Cvoid, (Ptr{LwsSortedUsecList},))
+end
+
+function get_recv_timeout_cb()
+    @cfunction(recv_timeout_cb, Cvoid, (Ptr{LwsSortedUsecList},))
+end
+
+function get_ext_pm_deflate_cb()
+    @cfunction(
+        lws_extension_callback_pm_deflate,
+        Cint,
+        (Ptr{LwsContext}, Ptr{LwsExtension}, Ptr{Lws}, Cint, Ptr{Cvoid}, Ptr{Cvoid}, Csize_t,)
+    )
+end
+
+function get_http_cb()
+    @cfunction(http_callback, Cint, (Ptr{Lws}, Cuint, Ptr{Cvoid}, Ptr{Cvoid}, Csize_t))
+end
+
+function lws_parse_uri(p::Ptr{Cchar}, prot::Ref{Ptr{Cchar}}, ads::Ref{Ptr{Cchar}}, port::Ref{Cint}, path::Ref{Ptr{Cchar}})
+    ccall((:lws_parse_uri, libwebsockets), Cint, (Ptr{Cchar}, Ref{Ptr{Cchar}}, Ref{Ptr{Cchar}}, Ref{Cint}, Ref{Ptr{Cchar}}), p, prot, ads, port, path)
+end
+
+function lws_get_opaque_user_data(wsi::Ptr{Lws})::Ptr{Cvoid}
+    ccall((:lws_get_opaque_user_data, libwebsockets), Ptr{Cvoid}, (Ptr{Lws},), wsi)
+end
+
+function lws_set_opaque_user_data(wsi::Ptr{Lws}, p::Ptr{Cvoid})
+    ccall((:lws_set_opaque_user_data, libwebsockets), Cvoid, (Ptr{Lws}, Ptr{Cvoid}), wsi, p)
+end
+
+function lws_uv_initloop(context::Ptr{LwsContext}, loop::Ptr{Cvoid}, tsi::Cint)::Cint
+    ccall((:lws_uv_initloop, libwebsockets), Cint, (Ptr{LwsContext}, Ptr{Cvoid}, Cint), context, loop, tsi)
+end
+
+function lws_set_protocol(wsi::Ptr{Lws}, proto::Ptr{LwsProtocols})
+    ccall((:lws_set_protocol, libwebsockets), Cvoid, (Ptr{Lws}, Ptr{LwsProtocols}), wsi, proto)
 end
