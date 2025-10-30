@@ -168,7 +168,7 @@ export lws_add_http_common_headers,
     lws_get_opaque_user_data,
     lws_set_opaque_user_data,
     lws_uv_initloop,
-    lws_set_protocol,
+    lws_set_protocol
 
 function lwsl_context_get_cx(cx)
     ccall((:lwsl_context_get_cx, libwebsockets), Ptr{LwsLogCx}, (Ptr{LwsContext},), cx)
