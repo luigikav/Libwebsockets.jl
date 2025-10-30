@@ -307,7 +307,6 @@ export LWS_CALLBACK_ADD_HEADERS,
     LWS_TXCR_PEER_TO_US,
     LWS_TXCR_US_TO_PEER
 
-
 export lws_add_http_common_headers,
     lws_add_http_header_by_name,
     lws_add_http_header_by_token,
