@@ -1,4 +1,4 @@
-# types.jl
+# __types
 
 struct LwsContext end
 struct LwsVhost end
